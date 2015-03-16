@@ -4,11 +4,9 @@ $gutter: 1rem;
 $double_gutter: $gutter * 2;
 $half_gutter: $gutter / 2;
 
-// $breakpoints: (
-//   small: 767px,
-//   medium: 992px,
-//   large: 1200px
-// );
+$font-fmaily: "Open Sans", sans-serif;
+$font-size: .9rem;
+
 
 $columns: (
 	1: 8.333%,
@@ -25,6 +23,7 @@ $columns: (
 	12: 100%,
 );
 
+
 // vendore prefixer
 
 @mixin vendor-prefix($name, $argument) {
@@ -39,12 +38,28 @@ $columns: (
 	#{$name}: #{$argument};
 }
 
+
+// utils
+
+@mixin disable-select {
+	@include vendor-prefix(user-select, none);
+}
+
+@mixin border-box {
+	@include vendor-prefix(box-sizing, border-box);
+}
+
+@mixin appearance-none {
+	@include vendor-prefix(appearance, none)
+}
+
+
 // basics
 
 body {
 	margin: 0;
 	padding: 0;
-	font: normal 1rem/130% "Open Sans", sans-serif;
+	font: normal #{$font-size} / 130% $font-fmaily;
 	cursor: default;
 	min-height: 100vh;
 	background-color: white;
@@ -55,7 +70,8 @@ body {
 	position: relative;
 	display: block;
 	margin: 0 auto;
-	box-sizing: border-box;
+	
+	@include border-box;
  
 	&.with-gutter {
 		padding-left: $gutter;
@@ -63,20 +79,26 @@ body {
 	}
 }
 
+
 // layout
 
-@mixin layout-with-gutter($gutter) {
-	// margin-left: -$gutter;
-	// margin-right: -$gutter;
+@mixin display-flex {
+	@include vendor-prefix-value(display, flex); 
+}
 
+@mixin display-inline-flex {
+	@include vendor-prefix-value(display, inline-flex); 
+}
+
+@mixin layout-with-gutter($gutter) {
 	.column {
 		padding-left: $gutter;
 		padding-right: $gutter;
 	}
 }
 
-.layout {
-	@include vendor-prefix-value(display, flex); 
+@mixin layout-columns {
+	@include display-flex;
 
 	.column {
 		// @include vendor-prefix(flex, 1);
@@ -109,44 +131,88 @@ body {
 	}
 }
 
+.layout {
+	@include display-flex;
+}
+
+.layout-columns {
+	@include layout-columns;
+}
+
 .wrapper > .layout {
 	@include layout-with-gutter($gutter);
 }
 
-.content-start {
+@mixin content-start {
 	@include vendor-prefix(justify-content, flex-start);
 }
 
-.content-end {
+.content-start {
+	@include content-start;
+}
+
+@mixin content-end {
 	@include vendor-prefix(justify-content, flex-end);
 }
 
-.content-center {
+.content-end {
+	@include content-end;
+}
+
+@mixin content-center {
 	@include vendor-prefix(justify-content, center);
 }
 
-.content-space-between {
+.content-center {
+	@include content-center;
+}
+
+@mixin content-space-between {
 	@include vendor-prefix(justify-content, space-between);
 }
 
-.content-space-around {
+.content-space-between {
+	@include content-space-between;
+}
+
+@mixin content-space-around {
 	@include vendor-prefix(justify-content, space-around);
 }
 
-.items-start {
+.content-space-around {
+	@include content-space-around;
+}
+
+@mixin items-start {
 	@include vendor-prefix(align-items, flex-start);
 }
 
-.items-end {
+.items-start {
+	@include items-start;
+}
+
+@mixin items-end {
 	@include vendor-prefix(align-items, flex-end);
 }
 
-.items-center {
+.items-end {
+	@include items-end;
+}
+
+@mixin items-center {
 	@include vendor-prefix(align-items, center);
 }
 
-.items-stretch {
+.items-center {
+	@include items-center;
+}
+
+@mixin items-stretch {
 	@include vendor-prefix(align-items, stretch);
+}
+
+.items-stretch {
+	@include items-stretch;
 }
 
 .order {
@@ -157,25 +223,64 @@ body {
 	}
 }
 
+@mixin flex {
+	@include vendor-prefix(flex, 1);
+}
+
+.flex {
+	@include flex;
+}
+
+@mixin no-flex {
+	@include vendor-prefix(flex, 0 0 auto);
+}
+
+.no-flex {
+	@include no-flex;
+}
+
+@mixin center-content {
+	@include display-flex; 
+	@include content-center;
+	@include items-center;
+}
+
+.center-content {
+	@include center-content;
+}
+
+@mixin layout-toolbar {
+	@include display-flex;	
+	@include items-center;
+	@include content-space-between;
+}
+
+.layout-toolbar {
+	@include layout-toolbar;
+}
+
+
+
+
 // buttons 
 
 button, 
 .button {
-	@include vendor-prefix-value(display, inline-flex);
-	@include vendor-prefix(align-items, center);
+	@include display-inline-flex;
+	@include items-center;
 	
 	padding: $gutter $double_gutter;
 	background-color: #ccc;
-	font-size: 1rem;
+	font-size: $font-size;
+	line-height: 130%;
 	border: none;
 	cursor: pointer;
 	text-decoration: none;
 	position: relative;
 	white-space: nowrap;
+	vertical-align: middle;
 
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
+	@include appearance-none;
 	
 	&.small {
 		padding: ($gutter * .75) $double_gutter;
@@ -219,6 +324,7 @@ img {
 
 a {
 	cursor: pointer;
+	text-decoration: none;
 }
 
 ul {
@@ -245,43 +351,103 @@ p {
 	}
 }
 
-input[type=text],
-input[type=email],
-input[type=password],
-select,
-textarea {
-	font-size: 1rem;
+@mixin input {
+	font: normal 1rem/130% $font-fmaily;
 	padding: .5rem;
 	border: 1px #ccc solid;
 	display: block;
 	width: 100%;
 	margin: 0;
 
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+	@include border-box;
+}
+
+input[type=text],
+input[type=email],
+input[type=date],
+input[type=password],
+select,
+textarea {
+	@include input;
 }
 
 input[type=checkbox],
 input[type=radio] {
 	padding: 0;
 	display: inline-block;
-	margin: 0;
+	margin: 0 .3rem 0 0;
 	width: auto;
 }
 
 select {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-
-		
+	@include appearance-none;
 }
 
-label {
-	display: block;
-	font-size: .9rem;
-	margin-bottom: .1rem;
+table {
+	background: white;
+	margin-bottom: 1.25rem;
+	border: solid 1px #dddddd;
+	width: 100%;
+  	border-collapse: collapse;
+  	font-size: $font-size;
+	
+	th, td {
+		padding: .5rem;
+
+		&:first-child {
+			padding-left: .75rem;
+		}
+
+		&:last-child {
+			padding-right: .75rem;
+		}
+	}
+
+	th {
+		text-align: left;
+	}
+
+	thead {
+		background: whitesmoke;
+	}
+
+	tbody {
+		tr:nth-of-type(even) {
+			background-color: #f9f9f9;
+		}
+
+		td {
+			line-height: 1rem;
+		}
+	}
+}
+
+form {
+	fieldset {
+		padding: 1rem;
+		margin: 0 0 2rem;
+	}
+
+	.form-group {
+		margin-bottom: 1rem;
+		position: relative;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		label {
+			margin-right: .5rem;
+
+			&:first-child {
+				margin-bottom: $half_gutter;
+				display: block;
+				font-size: .9em;
+
+				@include disable-select;
+			}
+		}
+	}
 }
 
 .text-right {
@@ -306,14 +472,80 @@ label {
 	line-height: 130%;
 }
 
-.form {
-	
-	&-group {
-		margin-bottom: 1rem;
+.blank-button {
+	display: inline-block;
+	padding: $gutter $double_gutter;
 
-		label {
-			margin-bottom: $half_gutter;
-			display: inline-block;
+	&.small {
+		padding: ($gutter * .75) $double_gutter;
+	}
+
+	&.tiny {
+		padding: $half_gutter $gutter;
+	}
+}
+
+.popup {
+	&-fog {
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		right: 0px;
+		bottom: 0px;
+		background: rgba(black, .75);
+		z-index: 99999;
+	}
+
+	&-holder {
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		right: 0px;
+		bottom: 0px;
+		z-index: 999999;
+		padding: 2rem;
+		overflow: auto;
+		pointer-events: none;
+
+		@include center-content;
+	}
+
+	min-width: 500px;
+	padding: 1.5rem;
+	background: white;
+	margin: auto;
+	pointer-events: all;
+
+	header {
+		@include layout-toolbar;
+
+		margin: -1.5rem -1.5rem 0;
+		padding: 1.5rem;
+
+		.title {
+			font-size: 1.2em;
+			text-transform: uppercase;
+			margin: 0;
+		}
+
+		.close {
+			@include center-content;
+
+			width: 40px;
+			height: 40px;
+		}
+	}
+
+	footer {
+		@include layout-toolbar;
+
+		margin: 0 -1.5rem -1.5rem;
+		padding: 1.5rem;
+
+		.buttons {
+			button, .button {
+				margin-left: .5rem;
+			}
 		}
 	}
 }
