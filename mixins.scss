@@ -1,0 +1,66 @@
+@import "variables";
+
+@mixin bg-image($url, $size: "cover", $width: null, $height: null) {
+	background: transparent url($url) no-repeat center / $size;
+
+	@if ($width and $height) {
+		display: inline-block;
+		width: $width;
+		height: $height;
+	}
+}
+
+@mixin shadow($level: 1) {
+	box-shadow: 0 #{$level * 2 - 1}px #{$level}px rgba(black, $level * .05);
+}
+
+@mixin input {
+	font: normal #{$font_size}/#{$font_line_height} $font_family;
+	padding: .5rem;
+	border: 1px $the_color solid;
+	display: block;
+	width: 100%;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+@mixin button {
+	display: inline-block;
+	text-align: center;
+	padding: ($gutter * .75) $gutter_and_half;
+	color: black;
+	background-color: $the_color;
+	font: normal #{$font_size}/#{$font_line_height} $font_family;
+	border: none;
+	cursor: pointer;
+	text-decoration: none;
+	position: relative;
+	white-space: nowrap;
+	vertical-align: middle;
+	appearance: none;
+	box-sizing: border-box;
+	min-height: 40px;
+	flex: 0 0 auto;
+	border-radius: 3px;
+
+	&:hover {
+		background-color: darken($the_color, 5%);
+	}
+}
+
+@mixin panel {
+	background: white;
+	border: none;
+	border-radius: 0;
+	padding: $gutter + $gutter_half;
+	margin-bottom: $gutter_double;
+	position: relative;
+}
+
+@mixin item-separator($gutter: $gutter_half) {
+	&:not(:last-child) {
+		padding-bottom: $gutter;
+		border-bottom: 1px solid $the_color;
+		margin-bottom: $gutter;
+	}
+}

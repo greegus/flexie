@@ -1,0 +1,18 @@
+$wrapper: 65rem;
+
+$gutter: 1.2rem;
+$gutter_quarter: $gutter / 4;
+$gutter_half: $gutter / 2;
+$gutter_and_half: $gutter + $gutter_half;
+$gutter_double: $gutter * 2;
+$gutter_triple: $gutter * 3;
+
+$font_size: 1rem;
+$font_line_height: 130%;
+$font_family: 'Open Sans', sans-serif;
+
+$the_color: #ccc;
+
+$media_queue_device: "only screen and (max-width: 1024px)";
+$media_queue_tablet: "only screen and (min-width: 481px) and (max-width : 1024px)";
+$media_queue_phone: "only screen and (max-width : 480px)";

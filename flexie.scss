@@ -1,320 +1,201 @@
-$wrapper: 60rem;
+@import "variables";
+@import "mixins";
 
-$gutter: 1rem;
-$double_gutter: $gutter * 2;
-$half_gutter: $gutter / 2;
-
-$font-fmaily: "Open Sans", sans-serif;
-$font-size: .9rem;
-
-
-$columns: (
-	1: 8.333%,
-	2: 16.666%,
-	3: 25%,
-	4: 33.333%,
-	5: 41.666%,
-	6: 50%,
-	7: 58.333%,
-	8: 66.666%,
-	9: 75%,
-	10: 83.333%,
-	11: 91.666%,
-	12: 100%,
-);
-
-
-// vendore prefixer
-
-@mixin vendor-prefix($name, $argument) {
-	-webkit-#{$name}: #{$argument};
-	-ms-#{$name}: #{$argument};
-	#{$name}: #{$argument};
+@mixin paddings($padding: $gutter) {
+	padding-left: $padding;
+	padding-right: $padding;
 }
 
-@mixin vendor-prefix-value($name, $argument) {
-	#{$name}: -webkit-#{$argument};
-	#{$name}: -ms-#{$argument};
-	#{$name}: #{$argument};
-}
-
-
-// utils
-
-@mixin disable-select {
-	@include vendor-prefix(user-select, none);
-}
-
-@mixin border-box {
-	@include vendor-prefix(box-sizing, border-box);
-}
-
-@mixin appearance-none {
-	@include vendor-prefix(appearance, none)
-}
-
-
-// basics
-
-body {
-	margin: 0;
-	padding: 0;
-	font: normal #{$font-size} / 130% $font-fmaily;
-	cursor: default;
-	min-height: 100vh;
-	background-color: white;
-}
-
-.wrapper {
-	width: $wrapper;
-	position: relative;
-	display: block;
-	margin: 0 auto;
-	
-	@include border-box;
- 
-	&.with-gutter {
-		padding-left: $gutter;
-		padding-right: $gutter;
+@mixin layout($prefix: null) {
+	@if $prefix {
+		$prefix: $prefix + "-";
 	}
-}
 
-
-// layout
-
-@mixin display-flex {
-	@include vendor-prefix-value(display, flex); 
-}
-
-@mixin display-inline-flex {
-	@include vendor-prefix-value(display, inline-flex); 
-}
-
-@mixin layout-with-gutter($gutter) {
-	.column {
-		padding-left: $gutter;
-		padding-right: $gutter;
+	.#{$prefix}-hide {
+		display: none !important;
 	}
-}
 
-@mixin layout-columns {
-	@include display-flex;
-
-	.column {
-		// @include vendor-prefix(flex, 1);
-
-		@each $column, $size in $columns {
-			&-#{$column} { 
-				@include vendor-prefix(flex-basis, $size); 
+	.#{$prefix}column {
+		@for $column from 1 through 12 {
+			&-#{$column} {
+				width: percentage($column / 12) !important;
 			}
 		}
 	}
 
-	&.with-gutter {
-		@include layout-with-gutter($gutter);
+	.#{$prefix}flex {
+		@for $size from 1 through 12 {
+			&-#{$size} {
+				flex-grow: $size !important;
+			}
+		}
 	}
 
-	&.with-double-gutter {
-		@include layout-with-gutter($double_gutter);
+	.#{$prefix}order {
+		@for $order from 1 through 12 {
+			&-#{$order} {
+				order: $order !important;
+			}
+		}
+	}
+
+	.#{$prefix}text-left {
+		text-align: left;
+	}
+
+	.#{$prefix}text-right {
+		text-align: right;
+	}
+
+	.#{$prefix}text-center {
+		text-align: center;
+	}
+
+	.#{$prefix}text-justify {
+		text-align: justify;
+	}
+
+	.#{$prefix}larger {
+		font-size: 1.2em;
+	}
+
+	.#{$prefix}smaller {
+		font-size: .9em;
+	}
+
+	.#{$prefix}flex {
+		flex: 1;
+	}
+
+	.#{$prefix}dont-flex {
+		flex: 0 0 auto;
+	}
+
+	.#{$prefix}items-start {
+		align-items: flex-start;
+	}
+
+	.#{$prefix}items-end {
+		align-items: flex-end;
+	}
+
+	.#{$prefix}items-center {
+		align-items: center;
+	}
+
+	.#{$prefix}items-stretch {
+		align-items: stretch;
+	}
+
+	.#{$prefix}items-baseline {
+		align-items: baseline
+	}
+
+	.#{$prefix}content-start {
+		justify-content: flex-start;
+	}
+
+	.#{$prefix}content-end {
+		justify-content: flex-end;
+	}
+
+	.#{$prefix}content-center {
+		justify-content: center;
+	}
+
+	.#{$prefix}content-space-between {
+		justify-content: space-between;
+	}
+
+	.#{$prefix}content-space-around {
+		justify-content: space-around;
+	}
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	cursor: default;
+	min-height: 100vh;
+	font: normal #{$font_size}/#{$font_line_height} $font_family;
+	background-color: white;
+}
+
+.icon {
+	font-size: 1.2em;
+	display: inline-block;
+	margin-right: $gutter_half;
+
+	&.flat {
+		width: 0;
+		overflow: hidden;
+		margin: 0;
+	}
+}
+
+.wrapper {
+	position: relative;
+	margin: 0 auto;
+	width: $wrapper;
+}
+
+.panel {
+	@include panel;
+}
+
+@mixin columns-gutter ($gutter_size: $gutter) {
+	& {
+		margin-left: -$gutter_size;
+		margin-right: -$gutter_size;
+	}
+
+	.column {
+		padding-left: $gutter_size;
+		padding-right: $gutter_size;
+	}
+}
+
+.columns {
+	@include columns-gutter();
+
+	display: flex;
+	align-items: flex-start;
+
+	.column {
+		flex: 0 0 auto;
+		box-sizing: border-box;
 	}
 
 	&.with-half-gutter {
-		@include layout-with-gutter($half_gutter);
+		@include columns-gutter($gutter_half);
 	}
 
-	&.inline {
-		@include vendor-prefix-value(display, inline-flex); 
+	&.with-no-gutter {
+		@include columns-gutter(0);
 	}
 
-	&.vertical {
-		@include vendor-prefix(flex-flow, column);
-	}
-}
-
-.layout {
-	@include display-flex;
-}
-
-.layout-columns {
-	@include layout-columns;
-}
-
-.wrapper > .layout {
-	@include layout-with-gutter($gutter);
-}
-
-@mixin content-start {
-	@include vendor-prefix(justify-content, flex-start);
-}
-
-.content-start {
-	@include content-start;
-}
-
-@mixin content-end {
-	@include vendor-prefix(justify-content, flex-end);
-}
-
-.content-end {
-	@include content-end;
-}
-
-@mixin content-center {
-	@include vendor-prefix(justify-content, center);
-}
-
-.content-center {
-	@include content-center;
-}
-
-@mixin content-space-between {
-	@include vendor-prefix(justify-content, space-between);
-}
-
-.content-space-between {
-	@include content-space-between;
-}
-
-@mixin content-space-around {
-	@include vendor-prefix(justify-content, space-around);
-}
-
-.content-space-around {
-	@include content-space-around;
-}
-
-@mixin items-start {
-	@include vendor-prefix(align-items, flex-start);
-}
-
-.items-start {
-	@include items-start;
-}
-
-@mixin items-end {
-	@include vendor-prefix(align-items, flex-end);
-}
-
-.items-end {
-	@include items-end;
-}
-
-@mixin items-center {
-	@include vendor-prefix(align-items, center);
-}
-
-.items-center {
-	@include items-center;
-}
-
-@mixin items-stretch {
-	@include vendor-prefix(align-items, stretch);
-}
-
-.items-stretch {
-	@include items-stretch;
-}
-
-.order {
-	@each $column, $size in $columns {
-		&-#{$column} { 
-			@include vendor-prefix(flex-order, $column); 
-		}
+	&:not(:last-child) {
+		margin-bottom: $gutter;
 	}
 }
 
-@mixin flex {
-	@include vendor-prefix(flex, 1);
-}
+.toolbar {
+	//	@include paddings;
 
-.flex {
-	@include flex;
-}
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 
-@mixin no-flex {
-	@include vendor-prefix(flex, 0 0 auto);
-}
-
-.no-flex {
-	@include no-flex;
-}
-
-@mixin center-content {
-	@include display-flex; 
-	@include content-center;
-	@include items-center;
-}
-
-.center-content {
-	@include center-content;
-}
-
-@mixin layout-toolbar {
-	@include display-flex;	
-	@include items-center;
-	@include content-space-between;
-}
-
-.layout-toolbar {
-	@include layout-toolbar;
-}
-
-
-
-
-// buttons 
-
-button, 
-.button {
-	@include display-inline-flex;
-	@include items-center;
-	
-	padding: $gutter $double_gutter;
-	background-color: #ccc;
-	font-size: $font-size;
-	line-height: 130%;
-	border: none;
-	cursor: pointer;
-	text-decoration: none;
-	position: relative;
-	white-space: nowrap;
-	vertical-align: middle;
-
-	@include appearance-none;
-	
-	&.small {
-		padding: ($gutter * .75) $double_gutter;
-	}
-
-	&.tiny {
-		padding: $half_gutter $gutter;
-	}
-
-	.icon,
-	.icon-left,
-	.icon-right {
-		font-size: 1.3em;
-		vertical-align: middle;
-		display: inline-block;
-	}
-	
-	.icon-left,
-	.icon-right {
-		@include vendor-prefix(transform, translate(0, -7%));
-	}
-
-	.icon-left {
-		margin-right: .25rem;
-	}
-
-	.icon-right {
-		margin-left: .25rem;
+	&.with-gutter {
+		@include paddings();
 	}
 }
+
+@include layout();
 
 hr {
 	border: none;
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid $the_color;
 	margin: 1rem 0;
 }
 
@@ -325,6 +206,10 @@ img {
 a {
 	cursor: pointer;
 	text-decoration: none;
+
+	i {
+		margin-right: $gutter_half * .25;
+	}
 }
 
 ul {
@@ -333,14 +218,14 @@ ul {
 	list-style-type: none;
 }
 
-h1, 
-h2, 
-h3, 
-h4, 
-h5, 
-h5, 
-ul, 
-ol, 
+h1,
+h2,
+h3,
+h4,
+h5,
+ul,
+ol,
+dl,
 p {
 	&:first-child {
 		margin-top: 0;
@@ -349,17 +234,6 @@ p {
 	&:last-child {
 		margin-bottom: 0;
 	}
-}
-
-@mixin input {
-	font: normal 1rem/130% $font-fmaily;
-	padding: .5rem;
-	border: 1px #ccc solid;
-	display: block;
-	width: 100%;
-	margin: 0;
-
-	@include border-box;
 }
 
 input[type=text],
@@ -375,61 +249,117 @@ input[type=checkbox],
 input[type=radio] {
 	padding: 0;
 	display: inline-block;
-	margin: 0 .3rem 0 0;
+	margin: 0 ($gutter * .25) 0 0;
 	width: auto;
+	position: relative;
+	top: -1px;
 }
 
 select {
-	@include appearance-none;
+	border-radius: 0;
+	-webkit-appearance: inherit;
+	appearance: inherit;
 }
 
 table {
 	background: white;
-	margin-bottom: 1.25rem;
-	border: solid 1px #dddddd;
+	margin-bottom: $gutter;
+	border: solid 1px $the_color;
 	width: 100%;
-  	border-collapse: collapse;
-  	font-size: $font-size;
-	
+	border-collapse: collapse;
+	font-size: $font_size;
+	margin-bottom: $gutter_double;
+
 	th, td {
-		padding: .5rem;
+		padding: $gutter * .75;
 
 		&:first-child {
-			padding-left: .75rem;
+			padding-left: $gutter;
 		}
 
 		&:last-child {
-			padding-right: .75rem;
+			padding-right: $gutter;
 		}
 	}
 
 	th {
 		text-align: left;
-	}
-
-	thead {
-		background: whitesmoke;
+		background-color: lighten($the_color, 5%);
 	}
 
 	tbody {
-		tr:nth-of-type(even) {
-			background-color: #f9f9f9;
+		tr {
+			&:nth-of-type(even) {
+				background-color: lighten($the_color, 15%);
+			}
 		}
 
 		td {
-			line-height: 1rem;
+			line-height: $gutter;
 		}
+
+		.options {
+			text-align: right;
+
+			.icon {
+				&:last-child {
+					margin-right: 0;
+				}
+			}
+		}
+	}
+}
+
+.button {
+	@include button;
+
+	&.small {
+		padding: $gutter_half $gutter;
+		min-height: 40px;
+	}
+
+	&.blank {
+		background-color: transparent;
+
+		&.small {
+			padding: ($gutter * .75) $gutter_double;
+		}
+	}
+
+	&.icon {
+		padding: 0;
+		text-align: center;
+
+		&.small {
+			width: 40px;
+			height: 40px;
+			line-height: 42px;
+		}
+
+		i {
+			margin: 0;
+		}
+	}
+
+	i {
+		font-size: 1.2em;
+		margin-right: .25em;
+		vertical-align: middle;
+	}
+
+	& + .button {
+		margin-left: $gutter_quarter;
 	}
 }
 
 form {
 	fieldset {
-		padding: 1rem;
-		margin: 0 0 2rem;
+		padding: $gutter;
+		margin: 0 0 $gutter_double;
 	}
 
 	.form-group {
-		margin-bottom: 1rem;
+		margin-bottom: $gutter;
 		position: relative;
 
 		&:last-child {
@@ -437,51 +367,22 @@ form {
 		}
 
 		label {
-			margin-right: .5rem;
+			margin-right: $gutter_half;
 
 			&:first-child {
-				margin-bottom: $half_gutter;
+				margin-bottom: $gutter_half;
 				display: block;
 				font-size: .9em;
-
-				@include disable-select;
+				user-select: none;
 			}
 		}
-	}
-}
 
-.text-right {
-	text-align: right;
-}
-
-.text-left {
-	text-align: left;
-}
-
-.text-center {
-	text-align: center;
-}
-
-.larger {
-	font-size: 1.2em;
-	line-height: 130%;
-}
-
-.smaller {
-	font-size: .85em;
-	line-height: 130%;
-}
-
-.blank-button {
-	display: inline-block;
-	padding: $gutter $double_gutter;
-
-	&.small {
-		padding: ($gutter * .75) $double_gutter;
-	}
-
-	&.tiny {
-		padding: $half_gutter $gutter;
+		.description {
+			color: #aaa;
+			font-size: .9em;
+			line-height: 130%;
+			margin-top: $gutter_half / 2;
+		}
 	}
 }
 
@@ -506,21 +407,23 @@ form {
 		padding: 2rem;
 		overflow: auto;
 		pointer-events: none;
-
-		@include center-content;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	min-width: 500px;
-	padding: 1.5rem;
+	padding: $gutter;
 	background: white;
 	margin: auto;
 	pointer-events: all;
 
 	header {
-		@include layout-toolbar;
-
-		margin: -1.5rem -1.5rem 0;
-		padding: 1.5rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: -$gutter -$gutter 0;
+		padding: $gutter;
 
 		.title {
 			font-size: 1.2em;
@@ -529,18 +432,23 @@ form {
 		}
 
 		.close {
-			@include center-content;
-
+			display: flex;
 			width: 40px;
 			height: 40px;
+
+			&::after {
+				content: "\00d7";
+				margin: auto;
+			}
 		}
 	}
 
 	footer {
-		@include layout-toolbar;
-
-		margin: 0 -1.5rem -1.5rem;
-		padding: 1.5rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: 0 -$gutter -$gutter;
+		padding: $gutter;
 
 		.buttons {
 			button, .button {
@@ -550,31 +458,30 @@ form {
 	}
 }
 
+.device-show,
+.tablet-show,
+.phone-show {
+	display: none;
+}
 
+@media #{$media_queue_device} {
+	@include layout("devices");
+}
 
-/* media query
-********************************************************************************************************/
+@media #{$media_queue_tablet} {
+	@include layout("tablet");
 
-@media screen and (max-width: $wrapper) {
-	.wrapper {
-		width: auto;
+	.centered {
+		margin-left: $wrapper / 10;
+		margin-right: $wrapper / 10;
 	}
+}
 
-	.small {
-		&-flex {
-			@each $column, $size in $columns {
-				&-#{$column} { 
-					@include vendor-prefix(flex-basis, $size); 
-				}
-			}
-		}
+@media #{$media_queue_phone} {
+	@include layout("phone");
 
-		&-order {
-			@each $column, $size in $columns {
-				&-#{$column} { 
-					@include vendor-prefix(flex-order, $column);
-				}
-			}
-		}
+	.centered {
+		margin-left: $gutter;
+		margin-right: $gutter;
 	}
 }
