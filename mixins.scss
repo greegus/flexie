@@ -1,4 +1,4 @@
-@import "variables";
+@import "defaults";
 
 @mixin bg-image($url, $size: "cover", $width: null, $height: null) {
 	background: transparent url($url) no-repeat center / $size;
@@ -17,11 +17,12 @@
 @mixin input {
 	font: normal #{$font_size}/#{$font_line_height} $font_family;
 	padding: .5rem;
-	border: 1px $the_color solid;
+	border: 1px $color_gray solid;
 	display: block;
 	width: 100%;
 	margin: 0;
 	box-sizing: border-box;
+	outline: none;
 }
 
 @mixin button {
@@ -29,11 +30,11 @@
 	text-align: center;
 	padding: ($gutter * .75) $gutter_and_half;
 	color: black;
-	background-color: $the_color;
-	font: normal #{$font_size}/#{$font_line_height} $font_family;
+	background-color: $color_gray;
+	font: normal #{$font_size}/100% $font_family;
 	border: none;
 	cursor: pointer;
-	text-decoration: none;
+	text-decoration: none !important;
 	position: relative;
 	white-space: nowrap;
 	vertical-align: middle;
@@ -42,9 +43,11 @@
 	min-height: 40px;
 	flex: 0 0 auto;
 	border-radius: 3px;
+	outline: none;
+	user-select: none;
 
-	&:hover {
-		background-color: darken($the_color, 5%);
+	&:hover, &:focus {
+		background-color: darken($color_gray, 5%);
 	}
 }
 
@@ -53,14 +56,27 @@
 	border: none;
 	border-radius: 0;
 	padding: $gutter + $gutter_half;
-	margin-bottom: $gutter_double;
 	position: relative;
+	margin-bottom: $gutter_double;
 }
 
 @mixin item-separator($gutter: $gutter_half) {
 	&:not(:last-child) {
 		padding-bottom: $gutter;
-		border-bottom: 1px solid $the_color;
+		border-bottom: 1px solid $color_gray;
 		margin-bottom: $gutter;
 	}
+}
+
+@mixin icon {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	text-align: center;
+	font-size: 1.2rem;
+	vertical-align: middle;
+	position: relative;
+	top: -1px;
+	color: inherit;
+	margin-right: $gutter_quarter;
 }
