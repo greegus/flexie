@@ -1,5 +1,11 @@
 @import "defaults";
 
+@mixin wrapper {
+	position: relative;
+	margin: 0 auto;
+	width: $wrapper;
+}
+
 @mixin bg-image($url, $size: "cover", $width: null, $height: null) {
 	background: transparent url($url) no-repeat center / $size;
 
@@ -11,10 +17,11 @@
 }
 
 @mixin shadow($level: 1) {
-	box-shadow: 0 #{$level * 2 - 1}px #{$level}px rgba(black, $level * .05);
+	box-shadow: 0 #{$level * 2}px #{$level}px rgba(black, $level * .05);
 }
 
 @mixin input {
+	background: white;
 	font: normal #{$font_size}/#{$font_line_height} $font_family;
 	padding: .5rem;
 	border: 1px $color_gray solid;
@@ -25,10 +32,26 @@
 	outline: none;
 }
 
+@mixin input-icons {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	pointer-events: none;
+	white-space: nowrap;
+	color: $color_gray;
+
+	.icon {
+		width: 40px;
+		height: 40px;
+		margin: 0;
+		position: static;
+	}
+}
+
 @mixin button {
 	display: inline-block;
 	text-align: center;
-	padding: ($gutter * .75) $gutter_and_half;
+	padding: $gutter $gutter_and_half;
 	color: black;
 	background-color: $color_gray;
 	font: normal #{$font_size}/100% $font_family;
@@ -40,7 +63,7 @@
 	vertical-align: middle;
 	appearance: none;
 	box-sizing: border-box;
-	min-height: 40px;
+	//	min-height: 40px;
 	flex: 0 0 auto;
 	border-radius: 3px;
 	outline: none;
@@ -49,6 +72,11 @@
 	&:hover, &:focus {
 		background-color: darken($color_gray, 5%);
 	}
+}
+
+@mixin invalid-input {
+	border-color: $error_color;
+	box-shadow: 0 0 0 1px $error_color;
 }
 
 @mixin panel {
@@ -70,13 +98,15 @@
 
 @mixin icon {
 	width: 20px;
-	height: 20px;
-	display: inline-block;
-	text-align: center;
+	height: 0;
 	font-size: 1.2rem;
 	vertical-align: middle;
 	position: relative;
-	top: -1px;
+	top: -2px;
 	color: inherit;
 	margin-right: $gutter_quarter;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	text-decoration: none !important;
 }

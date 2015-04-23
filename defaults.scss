@@ -16,9 +16,13 @@ $color_black: black !default;
 $color_gray: #CCC !default;
 $color_dark: #AAA !default;
 
-$text_color: lighten(black, 10%) !default;
+$text_color: lighten(black, 20%) !default;
+$text_light_color: lighten(black, 60%) !default;
 
-$zindex_popup: 999;
+$error_color: #b52424;
+
+$zindex_ultimate: 999;
+$zindex_popup: 100;
 
 $media_queue_device: "only screen and (max-width: 1024px)" !default;
 $media_queue_tablet: "only screen and (min-width: 481px) and (max-width : 1024px)" !default;

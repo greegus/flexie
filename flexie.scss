@@ -63,6 +63,10 @@
 		font-size: .9em;
 	}
 
+	.#{$prefix}light {
+		color: $text_light_color;
+	}
+
 	.#{$prefix}flex {
 		flex: 1;
 	}
@@ -119,10 +123,16 @@ body {
 	min-height: 100vh;
 	font: normal #{$font_size}/#{$font_line_height} $font_family;
 	background-color: white;
+	color: $text_color;
 }
 
 .icon {
 	@include icon;
+}
+
+.list-is-empty {
+	color: $text_light_color;
+	text-align: center;
 }
 
 .wrapper {
@@ -135,12 +145,7 @@ body {
 	@include panel;
 }
 
-@mixin columns-gutter ($gutter_size: $gutter) {
-	& {
-		margin-left: -$gutter_size;
-		margin-right: -$gutter_size;
-	}
-
+@mixin columns-gutter($gutter_size: $gutter) {
 	.column {
 		padding-left: $gutter_size;
 		padding-right: $gutter_size;
@@ -156,6 +161,15 @@ body {
 	.column {
 		flex: 0 0 auto;
 		box-sizing: border-box;
+		position: relative;
+
+		&:first-child {
+			padding-left: 0 !important;
+		}
+
+		&:last-child {
+			padding-right: 0 !important;
+		}
 	}
 
 	&.with-half-gutter {
@@ -235,6 +249,10 @@ input[type=password],
 select,
 textarea {
 	@include input;
+
+	&.ng-invalid.ng-touched {
+		@include invalid-input;
+	}
 }
 
 input[type=checkbox],
@@ -251,6 +269,21 @@ select {
 	border-radius: 0;
 	-webkit-appearance: inherit;
 	appearance: inherit;
+	background-color: darken($color_white, 5%);
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAARFJREFUeNrs2tEJwjAUQFHrAnYER3CDdgRHcRRHcgRHcASdIEaIn2KtwTzpufAQfwI5BJqKXUpppfmtEQAECBCgAAIECFAAAQIEKIAAAQIUQIAAAQogQIAABRAgQIACCBAgQAUA7Lquz3PKkyrNY61+SSdwn2eouN5Q1vz9YWjxH+lyWi55NpWWvOXZ5r1cF3ECy0bHsvEaeGMLvKYPkbzhcwXEJ955kU/hLxGb44W4xsxEDIEX5h74IWIYvFAX6YmIofDCvYm8QQyHF/JV7gViSLxmF+mJl+1d/jiWr4eIeKEB/ZgAUAABAgQogAABAhRAgAABCiBAgAAFECBAgAIIECBAAQQIECBAAQT4p90FGABL+Hyf+LcuhAAAAABJRU5ErkJggg==');
+	background-repeat: no-repeat;
+	background-position: center right;
+	background-size: 40px;
+
+	&:hover, &:focus {
+		background-color: darken($color_white, 10%);
+	}
+}
+
+input, select, textarea {
+	&[readonly] {
+		background-color: transparent !important;
+	}
 }
 
 table {
@@ -272,6 +305,30 @@ table {
 		&:last-child {
 			padding-right: $gutter;
 		}
+
+		&.id {
+			color: $color_dark;
+			text-align: right;
+			width: 20px;
+		}
+
+		&.options {
+			text-align: right;
+			white-space: nowrap;
+
+			a {
+				text-decoration: none;
+				margin: 0;
+
+				& + a {
+					margin-left: $gutter_quarter;
+
+					&.remove {
+						margin-left: $gutter_halt;
+					}
+				}
+			}
+		}
 	}
 
 	th {
@@ -280,9 +337,22 @@ table {
 	}
 
 	tbody {
+		$row_bg_color: $color_white;
+		$odd_row_bg_color: darken($row_bg_color, 2.5%);
+
 		tr {
-			&:nth-of-type(even) {
-				background-color: lighten($color_gray, 15%);
+			background-color: $row_bg_color;
+
+			&:nth-of-type(odd) {
+				background-color: $odd_row_bg_color;
+			}
+
+			&:hover {
+				background-color: darken($row_bg_color, 5%);
+
+				&:nth-of-type(odd) {
+					background-color: darken($odd_row_bg_color, 2.5%);
+				}
 			}
 		}
 
@@ -290,14 +360,8 @@ table {
 			line-height: $gutter;
 		}
 
-		.options {
-			text-align: right;
+		td, th {
 
-			.icon {
-				&:last-child {
-					margin-right: 0;
-				}
-			}
 		}
 	}
 }
@@ -306,12 +370,12 @@ table {
 	@include button;
 
 	&.small {
-		padding: $gutter_half $gutter;
+		padding: $gutter * .75 $gutter;
 		min-height: 40px;
 	}
 
-	&.large {
-		padding: $gutter $gutter_and_half;
+	&.tine {
+		padding: $gutter_half $gutter_half;
 		min-height: 48px;
 	}
 
@@ -338,13 +402,25 @@ table {
 		}
 	}
 
+	&[disabled] {
+		background-color: lighten($color_gray, 10%) !important;
+		color: lighten($text_color, 30%) !important;
+		opacity: .8 !important;
+	}
+
 	.icon {
-		margin: (-$gutter_half)  $gutter_quarter (-$gutter_half) 0;
+		margin: 0 $gutter_quarter 0 0;
+		height: 0;
+		line-height: 0;
 	}
 
 	& + .button {
-		margin-left: $gutter_quarter;
+		margin-left: $gutter_half !important;
 	}
+}
+
+*:not(.button) + .button {
+	margin-left: $gutter;
 }
 
 form {
@@ -361,6 +437,16 @@ form {
 			margin-bottom: 0;
 		}
 
+		.input-field {
+			margin-bottom: $gutter_half;
+			position: relative;
+		}
+
+		.errors {
+			font-size: .9rem;
+			color: red;
+		}
+
 		label {
 			margin-right: $gutter_half;
 
@@ -369,6 +455,18 @@ form {
 				display: block;
 				font-size: .9em;
 				user-select: none;
+			}
+		}
+
+		.input-icons {
+			@include input-icons;
+		}
+
+		input, textarea {
+			&.ng-invalid.ng-touched {
+				& ~ .input-icons {
+					color: $error_color;
+				}
 			}
 		}
 
@@ -385,72 +483,6 @@ form {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-	}
-}
-
-.popup {
-	&-fog {
-		position: fixed;
-		top: 0px;
-		left: 0px;
-		right: 0px;
-		bottom: 0px;
-		background: rgba(black, .75);
-		z-index: 99999;
-	}
-
-	&-holder {
-		position: fixed;
-		top: 0px;
-		left: 0px;
-		right: 0px;
-		bottom: 0px;
-		z-index: 999999;
-		padding: 2rem;
-		overflow: auto;
-		pointer-events: none;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	min-width: 500px;
-	padding: $gutter;
-	background: white;
-	margin: auto;
-	pointer-events: all;
-
-	header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin: -$gutter -$gutter 0;
-		padding: $gutter;
-
-		.title {
-			font-size: 1.2em;
-			text-transform: uppercase;
-			margin: 0;
-		}
-
-		.close {
-			display: flex;
-			width: 40px;
-			height: 40px;
-
-			&::after {
-				content: "\00d7";
-				margin: auto;
-			}
-		}
-	}
-
-	footer {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin: 0 -$gutter -$gutter;
-		padding: $gutter;
 	}
 }
 
